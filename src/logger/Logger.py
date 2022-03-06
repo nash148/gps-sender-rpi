@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import TimedRotatingFileHandler
 import os
 import sys
 import datetime
@@ -21,15 +22,18 @@ class MyLogger:
 
             if not os.path.isdir(dirname):
                 os.mkdir(dirname)
-            fileHandler = logging.FileHandler(
-                dirname + "/log_" + now.strftime("%d-%m-%Y_%H-%M-%S")+".log")
+            log_name = dirname + "/log_" + now.strftime("%d-%m-%Y_%H-%M-%S")+".log"
+            fileHandler = logging.FileHandler(log_name)
 
             streamHandler = logging.StreamHandler(sys.stdout)
+
+            timeRotatingHandler = TimedRotatingFileHandler(log_name, when="midnight", interval=1)
 
             fileHandler.setFormatter(formatter)
             streamHandler.setFormatter(formatter)
 
             cls._logger.addHandler(fileHandler)
             cls._logger.addHandler(streamHandler)
+            cls._logger.addHandler(timeRotatingHandler)
 
         return cls._logger
