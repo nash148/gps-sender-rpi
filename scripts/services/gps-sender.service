@@ -1,0 +1,9 @@
+[Unit]
+Description=GPS sender
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /home/pi/gps-sender/scripts/run_gps_sender.sh
+
+[Install]
+WantedBy=multi-user.target
