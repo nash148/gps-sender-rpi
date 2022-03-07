@@ -13,7 +13,6 @@ class ControlManager:
         self._logger = MyLogger()
         self._events_sender = EventsSender()
         self._ser_listener = None
-        self.init_serial_listener()
         self._logger.info('Init ControlManager')
 
     def init_serial_listener(self):
@@ -22,7 +21,7 @@ class ControlManager:
         self._ser_listener.open()
 
     def run(self):
-        is_failed = False
+        is_failed = True
         while True:
             try:
                 # TODO Implement more elegant way
