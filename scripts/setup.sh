@@ -4,7 +4,7 @@ echo "Starting setup..."
 
 # pip install
 echo "pip install..."
-sudo pip install -r ../requirenments.txt
+sudo pip3 install -r ../requirenments.txt
 
 echo "Create /home/pi/gps-sender/scripts dir"
 mkdir -p /home/pi/gps-sender/scripts
