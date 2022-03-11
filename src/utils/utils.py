@@ -1,4 +1,7 @@
+import serial
 from time import time
+import serial.tools.list_ports
+from src.config.settings import conf
 
 
 def current_milli_time():
@@ -38,3 +41,15 @@ def handle_received_data(data: str):
             parsed_dict['counter'] = int(separated_param[1][:-2])  # -2 to cut the \r\n in the end of the event
 
     return parsed_dict
+
+
+def get_serial_port():
+    """Returns the device path"""
+    ports = serial.tools.list_ports.comports()
+
+    for p in ports:
+        if p.vid == conf['vendor_id']:
+            return p.device
+    raise serial.serialutil.SerialException('Cannot find device!!')
+
+

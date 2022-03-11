@@ -1,6 +1,7 @@
 import serial
 from src.logger.Logger import MyLogger
 from src.config.settings import conf
+from src.utils.utils import get_serial_port
 
 
 class SerialListener:
@@ -8,12 +9,12 @@ class SerialListener:
         self._logger = MyLogger()
         self._ser = serial.Serial()
         self._ser.baudrate = conf['boudrate']
-        self._ser.port = conf['serial_port']
         self._logger.info('Init SerialListener\n')
 
     def open(self):
         """Open serial listener"""
         self._logger.info('Try open serial listener\n\n')
+        self._ser.port = get_serial_port()
         self._ser.open()
         self._logger.info('Serial listener opened successfully!\n\n')
 
