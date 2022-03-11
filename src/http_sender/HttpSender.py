@@ -11,10 +11,10 @@ class EventsSender:
     def send(self, event: dict):
         """Sends post request to the server"""
 
-        self._logger.info(f'Send post request with body: {event}')
+        self._logger.info(f'Send post event to server...\n\n')
         x = requests.post(conf['server_url'],
                           json=event,
                           headers={
                               'Content-Type': 'application/json'
                           })
-        self._logger.info(f'Http response msg: {x.text}')
+        self._logger.info(f'Server response: {x.text}\n\n')

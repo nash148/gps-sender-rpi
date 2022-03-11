@@ -13,7 +13,6 @@ class ControlManager:
         self._logger = MyLogger()
         self._events_sender = EventsSender()
         self._ser_listener = None
-        self.init_serial_listener()
         self._logger.info('Init ControlManager')
 
     def init_serial_listener(self):
@@ -22,7 +21,7 @@ class ControlManager:
         self._ser_listener.open()
 
     def run(self):
-        is_failed = False
+        is_failed = True
         while True:
             try:
                 # TODO Implement more elegant way
@@ -33,7 +32,7 @@ class ControlManager:
                 data = self._ser_listener.receive()
 
                 if 'ID' not in data:  # If it is not gps event
-                    self._logger.warn('Something wrong with the received data')
+                    self._logger.warn('The received data is not a GPS message!\n\n')
                     continue
 
                 parsed_data = handle_received_data(data)
@@ -41,15 +40,15 @@ class ControlManager:
                 self._send_event_to_server(parsed_data)
 
             except serial.serialutil.SerialException as e:
-                self._logger.error(str(e))
+                self._logger.error(f'{str(e)} \n\n')
                 is_failed = True
-                sleep(0.5)
+                sleep(30)
 
     def _send_event_to_server(self, event: dict):
         """Send the event to the server"""
         try:
             self._events_sender.send(event)
         except (requests.exceptions.InvalidSchema, requests.exceptions.ConnectionError) as e:
-            self._logger.error(f'During post request: {str(e)}')
+            self._logger.error(f'During post request: {str(e)}\n\n')
 
 

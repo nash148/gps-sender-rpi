@@ -21,6 +21,8 @@ def handle_received_data(data: str):
             separated_param = param.split(':')
         elif '=' in param:
             separated_param = param.split('=')
+        else:
+            return
 
         if separated_param[0] == 'GPS':
             gps_value = separated_param[1].split()
