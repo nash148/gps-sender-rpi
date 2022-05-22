@@ -8,6 +8,12 @@ def current_milli_time():
     return round(time() * 1000)
 
 
+def get_cow_id_from_alert(alert_data: str):
+    """returns the cow id from '<cow_id> alert'"""
+
+    return alert_data.split()[0]
+
+
 def handle_received_data(data: str):
     """Handles the receive data from the receiver"""
     # TODO Implement this func in more elegant way
