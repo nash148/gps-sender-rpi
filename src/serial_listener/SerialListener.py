@@ -21,7 +21,8 @@ class SerialListener:
     def receive(self):
         """Returns gps events"""
         self._logger.info('Read line from receiver...\n\n')
-        data = self._ser.readline().decode('ascii')
+        # data = self._ser.readline().decode('ascii')
+        data = '004 alert'
         self._logger.info('##################################################')
         self._logger.info(f'Received data: {data}')
         self._logger.info('##################################################\n\n')

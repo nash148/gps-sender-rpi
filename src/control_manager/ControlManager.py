@@ -2,7 +2,7 @@ import serial
 import requests
 from time import sleep
 from src.logger.Logger import MyLogger
-from src.utils.utils import handle_received_data
+from src.utils.utils import handle_received_data, get_cow_id_from_alert
 from src.serial_listener.SerialListener import SerialListener
 from src.http_sender.HttpSender import EventsSender
 
@@ -18,7 +18,7 @@ class ControlManager:
     def init_serial_listener(self):
         """Init the serial listener"""
         self._ser_listener = SerialListener()
-        self._ser_listener.open()
+        # self._ser_listener.open()
 
     def run(self):
         is_failed = True
@@ -31,24 +31,23 @@ class ControlManager:
 
                 data = self._ser_listener.receive()
 
+                if 'alert' in data:
+                    cow_id = get_cow_id_from_alert(data)
+                    self._events_sender.send_alert(cow_id)
+                    sleep(30)
+                    continue
+
                 if 'ID' not in data:  # If it is not gps event
                     self._logger.warn('The received data is not a GPS message!\n\n')
                     continue
 
                 parsed_data = handle_received_data(data)
 
-                self._send_event_to_server(parsed_data)
+                self._events_sender.send_event(parsed_data)
 
             except serial.serialutil.SerialException as e:
                 self._logger.error(f'{str(e)} \n\n')
                 is_failed = True
                 sleep(30)
-
-    def _send_event_to_server(self, event: dict):
-        """Send the event to the server"""
-        try:
-            self._events_sender.send(event)
-        except (requests.exceptions.InvalidSchema, requests.exceptions.ConnectionError) as e:
-            self._logger.error(f'During post request: {str(e)}\n\n')
 
 
